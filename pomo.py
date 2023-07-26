@@ -4,14 +4,6 @@ import time
 
 
 def get_user_input(screen):
-    """Get user input for study duration, break time, and break count.
-
-    Args:
-        screen (curses.window): The window to display the input prompt on.
-
-    Returns:
-        A tuple containing the study duration (in minutes), break time (in minutes), and break count.
-    """
     screen.clear()
     screen.addstr("For how many minutes do you want to study?\n> ")
     minutes = int(screen.getstr().decode())
@@ -25,14 +17,6 @@ def get_user_input(screen):
 
 
 def get_user_confirmation(screen):
-    """Get user confirmation to rerun the program.
-
-    Args:
-        screen (curses.window): The window to display the input prompt on.
-
-    Returns:
-        A string containing the user's choice (either 'yes' or 'no').
-    """
     while True:
         screen.clear()
         screen.addstr("Do you want to rerun the program? (Answer with either 'yes' or 'no')\n> ")
@@ -46,21 +30,13 @@ def get_user_confirmation(screen):
 
 
 def run_pomodoro(screen, minutes, break_time, break_count):
-    """Run the Pomodoro timer.
-
-    Args:
-        screen (curses.window): The window to display the timer on.
-        minutes (int): The duration of each study session (in minutes).
-        break_time (int): The duration of each break (in minutes).
-        break_count (int): The number of study/break cycles to complete.
-    """
     curses.curs_set(0)
 
     for i in range(break_count):
         seconds = minutes * 60
 
         while seconds > 0:
-            rem_min, rem_sec = divmod(seconds, 60)
+            rem_min, _ = divmod(seconds, 60)
 
             # Calculate progress
             progress = (minutes * 60 - seconds) / (minutes * 60)
@@ -72,8 +48,8 @@ def run_pomodoro(screen, minutes, break_time, break_count):
             # Display progress and clock
             screen.clear()
             screen.addstr(f"Pomodoro {i+1} of {break_count}\n")
-            screen.addstr(f"Time remaining: {rem_min:02d}:{rem_sec:02d}\n")
-            screen.addstr(f"{bar} {progress * 100:.1f}%")
+            screen.addstr(f"Time remaining: {rem_min} minutes\n")  # Updated line
+            screen.addstr(f"{bar}")
             screen.refresh()
             curses.doupdate()
 
@@ -91,20 +67,11 @@ def run_pomodoro(screen, minutes, break_time, break_count):
         screen.refresh()
         time.sleep(3)
 
-    screen.clear()  # clear the screen after the final break
+    screen.clear()
     screen.refresh()
 
 
 def main():
-    """
-    The main function of the Pomodoro timer program.
-
-    The function initializes a curses screen and then repeatedly prompts the user for input to determine the
-    duration of each Pomodoro, the length of each break, and the number of breaks. It then runs the Pomodoro timer,
-    waits for the user's confirmation to run the program again, and then exits.
-
-    :return: None
-    """
     while True:
         try:
             # Initialize a curses screen
@@ -136,5 +103,7 @@ def main():
             screen.keypad(False)
             curses.echo()
             curses.endwin()
+
+
 if __name__ == "__main__":
     main()
